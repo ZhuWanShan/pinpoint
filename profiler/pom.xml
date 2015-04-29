@@ -64,11 +64,7 @@
             <groupId>com.navercorp.pinpoint</groupId>
             <artifactId>pinpoint-rpc</artifactId>
         </dependency>
-        
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.ning</groupId>
             <artifactId>async-http-client</artifactId>

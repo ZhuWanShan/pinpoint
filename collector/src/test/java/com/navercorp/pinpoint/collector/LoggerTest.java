@@ -16,6 +16,7 @@
 
 package com.navercorp.pinpoint.collector;
 
+import org.apache.hadoop.hbase.zookeeper.MetaTableLocator;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

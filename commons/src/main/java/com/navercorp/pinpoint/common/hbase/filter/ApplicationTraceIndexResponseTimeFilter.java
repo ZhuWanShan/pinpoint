@@ -20,7 +20,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.FilterBase;
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -54,22 +56,23 @@ public class ApplicationTraceIndexResponseTimeFilter extends FilterBase {
         this.filterRow = true;
     }
 
-    @Override
-    public ReturnCode filterKeyValue(KeyValue kv) {
-        final byte[] buffer = kv.getBuffer();
+	@Override public ReturnCode filterKeyValue(Cell cell) throws IOException {
 
-        final int valueOffset = kv.getValueOffset();
-        final Buffer valueBuffer = new OffsetFixedBuffer(buffer, valueOffset);
-        int elapsed = valueBuffer.readVarInt();
+		final byte[] buffer = cell.getValueArray();
 
-        if (elapsed < responseTimeFrom || elapsed > responseTimeTo) {
-            // skip row if conditions are not met
-            filterRow = false;
-        }
+		final int valueOffset = cell.getValueOffset();
+		final Buffer valueBuffer = new OffsetFixedBuffer(buffer, valueOffset);
+		int elapsed = valueBuffer.readVarInt();
 
-        // always return this value as the actual decision for filtering happens later
-        return ReturnCode.INCLUDE;
-    }
+		if (elapsed < responseTimeFrom || elapsed > responseTimeTo) {
+			// skip row if conditions are not met
+			filterRow = false;
+		}
+
+		// always return this value as the actual decision for filtering happens later
+		return ReturnCode.INCLUDE;
+	}
+
 
     @Override
     public boolean filterRow() {
@@ -77,13 +80,5 @@ public class ApplicationTraceIndexResponseTimeFilter extends FilterBase {
         return filterRow;
     }
 
-    @Override
-    public void readFields(DataInput dataInput) throws IOException {
-        this.value = Bytes.readByteArray(dataInput);
-    }
 
-    @Override
-    public void write(DataOutput dataOutput) throws IOException {
-        Bytes.writeByteArray(dataOutput, this.value);
-    }
 }
