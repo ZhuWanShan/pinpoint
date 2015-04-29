@@ -12,7 +12,7 @@
     
     <properties>
         <jdk.version>1.7</jdk.version>
-        <jdk.home>${env.JAVA_7_HOME}</jdk.home>
+        <jdk.home>${env.JAVA_HOME}</jdk.home>
     </properties>
     
     <dependencies>
